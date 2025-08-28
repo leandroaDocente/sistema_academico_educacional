@@ -52,7 +52,7 @@ console.log(nome, email, cpf, endereco, complemento, cep, bairro, cidade, estado
 
     const user = await response.json();
     formAluno.reset();
-    alert("Aluno cadastrado com sucesso!!");
+    alert("Aluno cadastrado com sucesso!");
     console.log(user);
   } catch (error) {
     console.error(error);
