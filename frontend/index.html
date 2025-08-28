@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <!-- Font Awesome CDN gratuito -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Dashboard</title>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li><a href="#inicio"><i class="fa-solid fa-user-graduate"></i> <span>Inicio</span></a></li>
+            <li><a href="#cadastroAluno"><i class="fa-solid fa-user-graduate"></i> <span>Alunos</span></a></li>
+            <li><a href="#cadastroProfessor"><i class="fa-solid fa-chalkboard-teacher"></i> <span>Professores</span></a></li>
+            <li><a href="#relatorios"><i class="fa-solid fa-chart-bar"></i> <span>Relatórios</span></a></li>
+            <li><a href="#config"><i class="fa-solid fa-cog"></i> <span>Configurações</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="container">
+
+        <section class="telainicial" style="display: none;">
+            <h1>Bem-vindo ao Dashboard!</h1>
+        </section>
+
+        <!-- Formulário de Alunos -->
+        <form class="cadastroAluno-form" id="cadastroAluno">
+            <input type="text" name="nomeAluno" placeholder="Nome">
+            <input type="text" name="cpfAluno" placeholder="CPF">
+            <input type="email" name="emailAluno" placeholder="Email">
+            <input type="text" name="enderecoAluno" placeholder="Endereço">
+            <input type="text" name="complementoAluno" placeholder="Complemento">
+            <input type="text" name="cepAluno" placeholder="CEP">
+            <input type="text" name="bairroAluno" placeholder="Bairro">
+            <input type="text" name="cidadeAluno" placeholder="Cidade">
+            <input type="date" name="dataNascimentoAluno" placeholder="Data Nascimento">
+            <label for="estadoAluno">Selecione o Estado:</label>
+            <select name="estadoAluno" id="estado">
+                <option value="">Estado</option>
+                <option value="AC">AC</option>
+                <option value="AL">AL</option>
+                <option value="AP">AP</option>
+                <option value="AM">AM</option>
+                <option value="BA">BA</option>
+                <option value="CE">CE</option>
+                <option value="DF">DF</option>
+                <option value="ES">ES</option>
+                <option value="GO">GO</option>
+                <option value="MA">MA</option>
+                <option value="MT">MT</option>
+                <option value="MS">MS</option>
+                <option value="MG">MG</option>
+                <option value="PA">PA</option>
+                <option value="PB">PB</option>
+                <option value="PR">PR</option>
+                <option value="PE">PE</option>
+                <option value="PI">PI</option>
+                <option value="RJ">RJ</option>
+                <option value="RN">RN</option>
+                <option value="RS">RS</option>
+                <option value="RO">RO</option>
+                <option value="RR">RR</option>
+                <option value="SC">SC</option>
+                <option value="SP">SP</option>
+                <option value="SE">SE</option>
+                <option value="TO">TO</option>
+            </select>
+            <input type="tel" name="telefoneAluno" placeholder="Telefone">
+            <button type="submit">CADASTRAR</button>
+        </form>
+
+        <!-- Formulário de Professores -->
+        <form class="cadprofessor-form" id="cadastroProfessor" style="display: none;">
+            <input type="text" name="nomeProfessor" placeholder="Nome Completo">
+            <input type="text" name="enderecoProfessor" placeholder="Endereço">
+            <input type="text" name="complementoProfessor" placeholder="Complemento">
+            <input type="text" name="cepProfessor" placeholder="CEP">
+            <input type="text" name="cpfProfessor" placeholder="CPF">
+            <input type="text" name="bairroProfessor" placeholder="Bairro">
+            <input type="text" name="cidadeProfessor" placeholder="Cidade">
+            <input type="text" name="estadoProfessor" placeholder="Estado">
+            <input type="text" name="telefoneProfessor" placeholder="Telefone">
+            <input type="text" name="formacaoProfessor" placeholder="Formação">
+            <label for="titulacao">Titulação</label>
+            <select id="titulacao" name="titulacao">
+                <option value="">Selecione a titulação</option>
+                <option value="graduacao">Graduação</option>
+                <option value="especializacao">Especialização</option>
+                <option value="mestrado">Mestrado</option>
+                <option value="doutorado">Doutorado</option>
+            </select>
+            <button type="submit">CADASTRAR</button>
+        </form>
+    </main>
+
+<script src="script/scriptSidbar.js"></script>
+<script src="script/scriptForms.js"></script>
+</body>
+</html>
