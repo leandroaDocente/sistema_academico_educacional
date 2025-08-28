@@ -46,6 +46,8 @@ formAluno.addEventListener('submit', async (e) => {
       }),
     });
 
+console.log(nome, email, cpf, endereco, complemento, cep, bairro, cidade, estado, telefone, dataNascimento);
+
     if (!response.ok) throw new Error('Erro na requisição');
 
     const user = await response.json();
