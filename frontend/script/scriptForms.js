@@ -1,8 +1,15 @@
 const apiUrlAluno = 'http://localhost:3000/aluno';
 const apiUrlProfessor = 'http://localhost:3000/professor';
+const apiUrlDisciplina = 'http://localhost:3000/disciplina';
+const apiUrlTurma = 'http://localhost:3000/turma'; 
+
+
 
 const formAluno = document.getElementById('cadastroAluno');
 const formProfessor = document.getElementById('cadastroProfessor');
+const formDisciplina = document.getElementById('cadastroDisciplina');
+const formTurma = document.getElementById('cadastroTurma'); 
+
 
 // ==================================================================
 // =================FUNCIONAMENTO DOS FORMULÁRIOS=====================
@@ -124,3 +131,87 @@ console.log(nome, cpf, endereco, complemento, cep, bairro, cidade, estado, telef
     alert("Erro ao cadastrar professor. Tente novamente.");
   }
 });
+
+// =================CADASTRO DE DISCIPLINA===========================
+
+formDisciplina.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Dados do formulário
+  const nome = formDisciplina.querySelector('input[name="nomeDisciplina"]').value;
+  const codigo = formDisciplina.querySelector('input[name="codigoDisciplina"]').value;
+  const cargaHoraria = formDisciplina.querySelector('input[name="cargaHoraria"]').value;
+  const semestre = formDisciplina.querySelector('select[name="semestre"]').value;
+  const professorResponsavel = formDisciplina.querySelector('input[name="professorResponsavel"]').value;
+
+  console.log({
+    nome,
+    codigo,
+    cargaHoraria,
+    semestre,
+    professorResponsavel
+  });
+
+  try {
+    const response = await fetch(apiUrlDisciplina, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nome,
+        codigo,
+        cargaHoraria,
+        semestre,
+        professorResponsavel
+      }),
+    });
+
+    if (!response.ok) throw new Error('Erro na requisição');
+
+    const disciplina = await response.json();
+    formDisciplina.reset();
+    alert("Disciplina cadastrada com sucesso!");
+    console.log(disciplina);
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao cadastrar disciplina. Tente novamente.");
+  }
+
+  
+});
+
+// =================CADASTRO DE TURMA===========================
+
+formTurma.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const codigoTurma = formTurma.querySelector('input[name="codigoTurma"]').value;
+  const disciplinaTurma = formTurma.querySelector('select[name="disciplinaTurma"]').value;
+  const professorTurma = formTurma.querySelector('select[name="professorTurma"]').value;
+  const semestreTurma = formTurma.querySelector('select[name="semestreTurma"]').value;
+  const anoTurma = formTurma.querySelector('input[name="anoTurma"]').value;
+
+  try {
+    const response = await fetch(apiUrlTurma, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        codigoTurma,
+        disciplinaTurma,
+        professorTurma,
+        semestreTurma,
+        anoTurma
+      }),
+    });
+
+    if (!response.ok) throw new Error('Erro na requisição');
+
+    const turma = await response.json();
+    formTurma.reset();
+    alert("Turma cadastrada com sucesso!");
+    console.log(turma);
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao cadastrar turma. Tente novamente.");
+  }
+});
+
