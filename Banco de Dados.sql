@@ -31,3 +31,31 @@ prof_titulacao ENUM("graduação","pos-graduação","mestrado","doutorado","phd"
 fk_endereco_prof INT NOT NULL,
 FOREIGN KEY (fk_endereco_prof) REFERENCES tb_endereco(endereco_id)
 );
+
+CREATE TABLE tb_cursos (
+cursos_id INT PRIMARY KEY AUTO_INCREMENT,
+cursos_cordenador VARCHAR(50) NULL,
+cursos_nome VARCHAR(200) NOT NULL,
+cursos_duracao INT NOT NULL,
+fk_disc_cursos INT NULL
+);
+
+CREATE TABLE tb_disciplinas(
+disc_id INT PRIMARY KEY AUTO_INCREMENT,
+disc_nome VARCHAR(200) NOT NULL,
+disc_duracao VARCHAR(50) NOT NULL,
+fk_cursos_disc INT NOT NULL,
+FOREIGN KEY (fk_cursos_disc) REFERENCES tb_cursos(cursos_id)
+);
+
+CREATE TABLE tb_turmas(
+turma_id INT PRIMARY KEY AUTO_INCREMENT,
+fk_aluno_turma INT NULL,
+fk_prof_turma INT NOT NULl,
+turma_curso VARCHAR(255) NOT NULL,
+turma_horario VARCHAR(255) NOT NULL,
+fk_disc_turma INT NOT NULL,
+FOREIGN KEY (fk_disc_turma) REFERENCES  tb_disciplinas(disc_id),
+FOREIGN KEY (fk_aluno_turma) REFERENCES tb_aluno(aluno_id),
+FOREIGN KEY (fk_prof_turma) REFERENCES  tb_professor(prof_id)
+);
