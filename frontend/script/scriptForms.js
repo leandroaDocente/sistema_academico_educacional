@@ -1,15 +1,16 @@
+// URL das APIs
 const apiUrlAluno = 'http://localhost:3000/aluno';
 const apiUrlProfessor = 'http://localhost:3000/professor';
 const apiUrlDisciplina = 'http://localhost:3000/disciplina';
 const apiUrlTurma = 'http://localhost:3000/turma'; 
+const apiUrlCurso = 'http://localhost:3000/curso';
 
-
-
+// Pega os formulários (FORMS)
 const formAluno = document.getElementById('cadastroAluno');
 const formProfessor = document.getElementById('cadastroProfessor');
 const formDisciplina = document.getElementById('cadastroDisciplina');
 const formTurma = document.getElementById('cadastroTurma'); 
-
+const formCurso = document.getElementById('cadastroCurso');
 
 // ==================================================================
 // =================FUNCIONAMENTO DOS FORMULÁRIOS=====================
@@ -53,8 +54,6 @@ formAluno.addEventListener('submit', async (e) => {
       }),
     });
 
-console.log(nome, email, cpf, endereco, complemento, cep, bairro, cidade, estado, telefone, dataNascimento);
-
     if (!response.ok) throw new Error('Erro na requisição');
 
     const user = await response.json();
@@ -85,20 +84,6 @@ formProfessor.addEventListener('submit', async (e) => {
   const formacao = formProfessor.querySelector('input[name="formacaoProfessor"]').value;
   const titulacao = formProfessor.querySelector('select[name="titulacao"]').value;
 
-  console.log({
-    nome,
-    cpf,
-    endereco,
-    complemento,
-    cep,
-    bairro,
-    cidade,
-    estado,
-    telefone,
-    formacao,
-    titulacao
-  });
-
   try {
     const response = await fetch(apiUrlProfessor, {
       method: 'POST',
@@ -117,8 +102,6 @@ formProfessor.addEventListener('submit', async (e) => {
         titulacao
       }),
     });
-
-console.log(nome, cpf, endereco, complemento, cep, bairro, cidade, estado, telefone, formacao, titulacao);
 
     if (!response.ok) throw new Error('Erro na requisição');
 
@@ -215,3 +198,37 @@ formTurma.addEventListener('submit', async (e) => {
   }
 });
 
+// =================CADASTRO DE CURSO===========================
+
+formCurso.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Dados do formulário
+  const nomeCurso = formCurso.querySelector('input[name="nomeCurso"]').value;
+  const codernadorDoCurso = formCurso.querySelector('input[name="codernadorDoCurso"]').value;
+  const duracaoCurso = formCurso.querySelector('input[name="duracaoCurso"]').value;
+  const descricaoCurso = formCurso.querySelector('input[name="descricaoCurso"]').value;
+
+  try {
+    const response = await fetch(apiUrlCurso, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nomeCurso,
+        codernadorDoCurso,
+        duracaoCurso,
+        descricaoCurso
+      }),
+    });
+
+    if (!response.ok) throw new Error('Erro na requisição');
+
+    const curso = await response.json();
+    formCurso.reset();
+    alert("Curso cadastrado com sucesso!");
+    console.log(curso);
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao cadastrar curso. Tente novamente.");
+  }
+});

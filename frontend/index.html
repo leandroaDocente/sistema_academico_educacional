@@ -6,27 +6,27 @@
     <link rel="stylesheet" href="style/style.css">
     <!-- Font Awesome CDN gratuito -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <title>Dashboard</title>
+    <title>Sistema Acadêmico</title>
 </head>
 <body>
 
     <!-- Sidebar -->
     <nav class="sidebar">
-        <h2>Dashboard</h2>
+        <h2>Sistema Acadêmico</h2>
         <ul>
-            <li><a href="#inicio"><i class="fa-solid fa-user-graduate"></i> <span>Inicio</span></a></li>
+            <li><a href="#inicio"><i class="fa-solid fa-house"></i> <span>Inicio</span></a></li>
             <li><a href="#cadastroAluno"><i class="fa-solid fa-user-graduate"></i> <span>Alunos</span></a></li>
             <li><a href="#cadastroProfessor"><i class="fa-solid fa-chalkboard-teacher"></i> <span>Professores</span></a></li>
-            <li><a href="#relatorios"><i class="fa-solid fa-chart-bar"></i> <span>Relatórios</span></a></li>
-            <li><a href="#config"><i class="fa-solid fa-cog"></i> <span>Configurações</span></a></li>
+            <li><a href="#cadastroDisciplina"><i class="fa-solid fa-book"></i><span>Disciplina</span></a></li>
+            <li><a href="#cadastroTurma"><i class="fa-solid fa-users"></i> <span>Turma</span></a></li>
+            <li><a href="#cadastroCurso"><i class="fa-solid fa-pen"></i> <span>Curso</span></a></li>
         </ul>
     </nav>
 
     <!-- Conteúdo principal -->
     <main class="container">
 
-        <section class="telainicial" style="display: none;">
-            <h1>Bem-vindo ao Dashboard!</h1>
+        <section class="telainicial">
         </section>
 
         <!-- Formulário de Alunos -->
@@ -76,7 +76,7 @@
         </form>
 
         <!-- Formulário de Professores -->
-        <form class="cadprofessor-form" id="cadastroProfessor" style="display: none;">
+        <form class="cadprofessor-form" id="cadastroProfessor">
             <input type="text" name="nomeProfessor" placeholder="Nome Completo">
             <input type="text" name="enderecoProfessor" placeholder="Endereço">
             <input type="text" name="complementoProfessor" placeholder="Complemento">
@@ -97,79 +97,86 @@
             </select>
             <button type="submit">CADASTRAR</button>
         </form>
+
+        <!-- Formulário de Disciplinas -->
+        <form class="caddisciplina-form" id="cadastroDisciplina">
+            <input type="text" name="nomeDisciplina" placeholder="Nome da Disciplina" required>
+            <input type="text" name="codigoDisciplina" placeholder="Código da Disciplina" required>
+            <input type="number" name="cargaHoraria" placeholder="Carga Horária (em horas)" required>
+    
+            <label for="semestre">Semestre</label>
+            <select id="semestre" name="semestre" required>
+            <option value="">Selecione o semestre</option>
+            <option value="1">1º Semestre</option>
+            <option value="2">2º Semestre</option>
+            <option value="3">3º Semestre</option>
+            <option value="4">4º Semestre</option>
+            <option value="5">5º Semestre</option>
+            <option value="6">6º Semestre</option>
+            <option value="7">7º Semestre</option>
+            <option value="8">8º Semestre</option>
+            </select>
+
+            <label for="professorResponsavel">Professor Responsável</label>
+            <input type="text" name="professorResponsavel" placeholder="Nome do Professor" required>
+
+            <button type="submit">CADASTRAR</button>
+        </form>
+
+
+        <!-- Formulário de Turmas -->
+        <form class="cadturma-form" id="cadastroTurma" style="display: none;">
+            <h2>Cadastro de Turmas</h2>
+
+            <input type="text" name="codigoTurma" placeholder="Código da Turma" required>
+    
+            <label for="disciplinaTurma">Disciplina</label>
+            <select id="disciplinaTurma" name="disciplinaTurma" required>
+            <option value="">Selecione a disciplina</option>
+            <option value="MAT101">MAT101 - Matemática</option>
+            <option value="POR201">POR201 - Português</option>
+            <option value="HIS301">HIS301 - História</option>
+            </select>
+
+            <label for="professorTurma">Professor Responsável</label>
+            <select id="professorTurma" name="professorTurma" required>
+            <option value="">Selecione o professor</option>
+            <option value="prof1">João da Silva</option>
+            <option value="prof2">Maria Souza</option>
+            </select>
+
+            <label for="semestreTurma">Semestre</label>
+            <select id="semestreTurma" name="semestreTurma" required>
+            <option value="">Selecione o semestre</option>
+            <option value="1">1º Semestre</option>
+            <option value="2">2º Semestre</option>
+            <option value="3">3º Semestre</option>
+            <option value="4">4º Semestre</option>
+            <option value="5">5º Semestre</option>
+            <option value="6">6º Semestre</option>
+            <option value="7">7º Semestre</option>
+            <option value="8">8º Semestre</option>
+            </select>
+
+            <label for="anoTurma">Ano</label>
+            <input type="number" name="anoTurma" id="anoTurma" placeholder="Ano (ex: 2025)" required>
+
+            <button type="submit">CADASTRAR</button>
+        </form>
+
+
+        <!-- Formulário de Cursos -->
+        <form id="cadastroCurso">
+            <input type="text" name="nomeCurso" placeholder="Nome do Curso">
+            <input type="text" name="codernadorDoCurso" placeholder="Cordenador do Curso">
+            <input type="text" name="duracaoDoCurso" placeholder="Duracao do Curso">
+            <input type="text" name="descricaoDoCurso" placeholder="Descricao do Curso">
+            <button type="submit">CADASTRAR</button>
+        </form>
     </main>
 
-
-    <!-- Formulário de Disciplinas -->
-<form class="caddisciplina-form" id="cadastroDisciplina" style="display: none;">
-    <input type="text" name="nomeDisciplina" placeholder="Nome da Disciplina" required>
-    <input type="text" name="codigoDisciplina" placeholder="Código da Disciplina" required>
-    <input type="number" name="cargaHoraria" placeholder="Carga Horária (em horas)" required>
-    
-    <label for="semestre">Semestre</label>
-    <select id="semestre" name="semestre" required>
-        <option value="">Selecione o semestre</option>
-        <option value="1">1º Semestre</option>
-        <option value="2">2º Semestre</option>
-        <option value="3">3º Semestre</option>
-        <option value="4">4º Semestre</option>
-        <option value="5">5º Semestre</option>
-        <option value="6">6º Semestre</option>
-        <option value="7">7º Semestre</option>
-        <option value="8">8º Semestre</option>
-    </select>
-
-    <label for="professorResponsavel">Professor Responsável</label>
-    <input type="text" name="professorResponsavel" placeholder="Nome do Professor" required>
-
-    <button type="submit">CADASTRAR</button>
-</form>
-
-<!-- Formulário de Turmas -->
-<form class="cadturma-form" id="cadastroTurma" style="display: none;">
-    <h2>Cadastro de Turmas</h2>
-
-    <input type="text" name="codigoTurma" placeholder="Código da Turma" required>
-    
-    <label for="disciplinaTurma">Disciplina</label>
-    <select id="disciplinaTurma" name="disciplinaTurma" required>
-        <option value="">Selecione a disciplina</option>
-        <option value="MAT101">MAT101 - Matemática</option>
-        <option value="POR201">POR201 - Português</option>
-        <option value="HIS301">HIS301 - História</option>
-    </select>
-
-    <label for="professorTurma">Professor Responsável</label>
-    <select id="professorTurma" name="professorTurma" required>
-        <option value="">Selecione o professor</option>
-        <option value="prof1">João da Silva</option>
-        <option value="prof2">Maria Souza</option>
-    </select>
-
-    <label for="semestreTurma">Semestre</label>
-    <select id="semestreTurma" name="semestreTurma" required>
-        <option value="">Selecione o semestre</option>
-        <option value="1">1º Semestre</option>
-        <option value="2">2º Semestre</option>
-        <option value="3">3º Semestre</option>
-        <option value="4">4º Semestre</option>
-        <option value="5">5º Semestre</option>
-        <option value="6">6º Semestre</option>
-        <option value="7">7º Semestre</option>
-        <option value="8">8º Semestre</option>
-    </select>
-
-    <label for="anoTurma">Ano</label>
-    <input type="number" name="anoTurma" id="anoTurma" placeholder="Ano (ex: 2025)" required>
-
-    <button type="submit">CADASTRAR</button>
-</form>
-
-
-<script src="script/scriptSidbar.js"></script>
-<script src="script/scriptForms.js"></script>
-
-<li><a href="#cadastroDisciplina"><i class="fa-solid fa-book"></i> <span>Disciplinas</span></a></li>
+            <script src="script/scriptSidbar.js"></script>
+            <script src="script/scriptForms.js"></script>
 
 </body>
 </html>
