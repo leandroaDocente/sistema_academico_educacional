@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const connection = require("../db"); 
+const connection = require("../connectDb.js"); 
 
 router.post("/", (req, res) => {
   const { codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma } = req.body;
@@ -34,7 +34,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:id", (req, res) => {
+router.get("", (req, res) => {
   const { id } = req.params;
   connection.query("SELECT * FROM tb_turma WHERE turma_id = ?", [id], (err, result) => {
     if (err) {
@@ -49,7 +49,7 @@ router.get("/:id", (req, res) => {
 });
 
 
-router.put("/:id", (req, res) => {
+router.put("", (req, res) => {
   const { id } = req.params;
   const { codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma } = req.body;
 

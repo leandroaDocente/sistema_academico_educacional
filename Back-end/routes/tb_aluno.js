@@ -1,38 +1,42 @@
-import pool from "../../connectDb";
+const express = require("express");
+const router = express.Router();
+const connection = require("../connectDb");
 
-const Aluno = {
-  getAll: async () => {
-    const [rows] = await pool.query("SELECT * FROM tb_aluno");
-    return rows;
-  },
+router.get("/", async (req, res) => {
+  const [rows] = await connection.query("SELECT * FROM tb_aluno");
+  res.json(rows);
+});
 
-  getById: async (id) => {
-    const [rows] = await pool.query("SELECT * FROM tb_aluno WHERE aluno_id = ?", [id]);
-    return rows[0]; 
-  },
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const [rows] = await connection.query("SELECT * FROM tb_aluno WHERE aluno_id = ?", [id]);
+  res.json(rows[0]);
+});
 
-  create: async (data) => {
-    const { aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno } = data;
-    const [result] = await pool.query(
-      "INSERT INTO tb_aluno (aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno) VALUES (?, ?, ?, ?, ?, ?)",
-      [aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno]
-    );
-    return { id: result.insertId, ...data };
-  },
+router.post("/", async (req, res) => {
+  const { aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno } = req.body;
+  const [result] = await connection.query(
+    "INSERT INTO tb_aluno (aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno) VALUES (?, ?, ?, ?, ?, ?)",
+    [aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno]
+  );
+  res.status(201).json({ id: result.insertId, ...req.body });
+});
 
-  update: async (id, data) => {
-    const { aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno } = data;
-    await pool.query(
-      "UPDATE tb_aluno SET aluno_nome=?, aluno_cpf=?, aluno_email=?, aluno_telefone=?, aluno_data_nascimento=?, fk_endereco_aluno=? WHERE aluno_id=?",
-      [aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno, id]
-    );
-    return { id, ...data };
-  },
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno } = req.body;
+  await connection.query(
+    "UPDATE tb_aluno SET aluno_nome=?, aluno_cpf=?, aluno_email=?, aluno_telefone=?, aluno_data_nascimento=?, fk_endereco_aluno=? WHERE aluno_id=?",
+    [aluno_nome, aluno_cpf, aluno_email, aluno_telefone, aluno_data_nascimento, fk_endereco_aluno, id]
+  );
+  res.json({ id, ...req.body });
+});
 
-  delete: async (id) => {
-    await pool.query("DELETE FROM tb_aluno WHERE aluno_id=?", [id]);
-    return { message: "Aluno deletado com sucesso" };
-  }
-};
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  await connection.query("DELETE FROM tb_aluno WHERE aluno_id=?", [id]);
+  res.json({ message: "Aluno deletado com sucesso" });
+});
 
-export default Aluno;
+module.exports = router;
+
