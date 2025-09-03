@@ -1,217 +1,232 @@
-const apiUrlAluno = 'http://localhost:3000/aluno';
-const apiUrlProfessor = 'http://localhost:3000/professor';
-const apiUrlDisciplina = 'http://localhost:3000/disciplina';
-const apiUrlTurma = 'http://localhost:3000/turma'; 
-
-
+const apiUrlAluno = 'http://localhost:3000/tb_aluno';
+const apiUrlProfessor = 'http://localhost:3000/tb_professor';
+const apiUrlDisciplina = 'http://localhost:3000/tb_disciplinas';
+const apiUrlTurma = 'http://localhost:3000/tb_turmas';
+const apiUrlCurso = 'http://localhost:3000/tb_cursos';
 
 const formAluno = document.getElementById('cadastroAluno');
 const formProfessor = document.getElementById('cadastroProfessor');
 const formDisciplina = document.getElementById('cadastroDisciplina');
 const formTurma = document.getElementById('cadastroTurma'); 
+const formCurso = document.getElementById('cadastroCurso');
 
 
-// ==================================================================
-// =================FUNCIONAMENTO DOS FORMULÁRIOS=====================
-// ==================================================================
-
-
-// =================CADASTRO DE ALUNO===============================
+// ! ==================================================================
+// ! ================= CADASTRO DE ALUNO ===============================
+// ! ==================================================================
 
 formAluno.addEventListener('submit', async (e) => {
   e.preventDefault();
+  console.log("🔵 Evento: cadastroAluno");
+  // Endereço
+  const endereco = {
+    endereco_comple: formAluno.querySelector('input[name="endereco_comple"]').value,
+    endereco_cep: formAluno.querySelector('input[name="endereco_cep"]').value,
+    endereco_estado: formAluno.querySelector('select[name="endereco_estado"]').value,
+    endereco_cidade: formAluno.querySelector('input[name="endereco_cidade"]').value,
+    endereco_bairro: formAluno.querySelector('input[name="endereco_bairro"]').value,
+  };
 
-  // Dados do formulário
-  const nome = formAluno.querySelector('input[name="nomeAluno"]').value;
-  const email = formAluno.querySelector('input[name="emailAluno"]').value;
-  const cpf = formAluno.querySelector('input[name="cpfAluno"]').value;
-  const endereco = formAluno.querySelector('input[name="enderecoAluno"]').value;
-  const complemento = formAluno.querySelector('input[name="complementoAluno"]').value;
-  const cep = formAluno.querySelector('input[name="cepAluno"]').value;
-  const bairro = formAluno.querySelector('input[name="bairroAluno"]').value;
-  const cidade = formAluno.querySelector('input[name="cidadeAluno"]').value;
-  const estado = formAluno.querySelector('select[name="estadoAluno"]').value;
-  const telefone = formAluno.querySelector('input[name="telefoneAluno"]').value;
-  const dataNascimento = formAluno.querySelector('input[name="dataNascimentoAluno"]').value;
+  // Aluno
+  const aluno = {
+    aluno_nome: formAluno.querySelector('input[name="aluno_nome"]').value,
+    aluno_email: formAluno.querySelector('input[name="aluno_email"]').value,
+    aluno_cpf: formAluno.querySelector('input[name="aluno_cpf"]').value,
+    aluno_telefone: formAluno.querySelector('input[name="aluno_telefone"]').value,
+    aluno_data_nascimento: formAluno.querySelector('input[name="aluno_data_nascimento"]').value,
+  };
 
   try {
-    const response = await fetch(apiUrlAluno, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome,
-        email,
-        cpf,
-        endereco,
-        complemento,
-        cep,
-        bairro,
-        cidade,
-        estado,
-        telefone,
-        dataNascimento
-      }),
+    // Cadastra endereço
+    const enderecoResponse = await fetch("http://localhost:3000/tb_endereco", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(endereco),
     });
+    if (!enderecoResponse.ok) throw new Error("Erro ao cadastrar endereço");
 
-console.log(nome, email, cpf, endereco, complemento, cep, bairro, cidade, estado, telefone, dataNascimento);
+    const enderecoData = await enderecoResponse.json();
+    aluno.fk_endereco_aluno = enderecoData.id; // id retornado pelo backend
 
-    if (!response.ok) throw new Error('Erro na requisição');
+    // Cadastra aluno
+    const alunoResponse = await fetch(apiUrlAluno, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(aluno),
+    });
+    if (!alunoResponse.ok) throw new Error("Erro ao cadastrar aluno");
 
-    const user = await response.json();
-    formAluno.reset();
     alert("Aluno cadastrado com sucesso!");
-    console.log(user);
+    formAluno.reset();
+
   } catch (error) {
     console.error(error);
-    alert("Erro ao cadastrar aluno. Tente novamente.");
+    alert("Erro ao cadastrar aluno.");
   }
+
+  console.log(endereco);
+  console.log(aluno);
 });
 
-// =================CADASTRO DE PROFESSOR===========================
+
+// ! ==================================================================
+// ! ================= CADASTRO DE PROFESSOR ==========================
+// ! ==================================================================
 
 formProfessor.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Dados do formulário
-  const nome = formProfessor.querySelector('input[name="nomeProfessor"]').value;
-  const cpf = formProfessor.querySelector('input[name="cpfProfessor"]').value;
-  const endereco = formProfessor.querySelector('input[name="enderecoProfessor"]').value;
-  const complemento = formProfessor.querySelector('input[name="complementoProfessor"]').value;
-  const cep = formProfessor.querySelector('input[name="cepProfessor"]').value;
-  const bairro = formProfessor.querySelector('input[name="bairroProfessor"]').value;
-  const cidade = formProfessor.querySelector('input[name="cidadeProfessor"]').value;
-  const estado = formProfessor.querySelector('input[name="estadoProfessor"]').value;
-  const telefone = formProfessor.querySelector('input[name="telefoneProfessor"]').value;
-  const formacao = formProfessor.querySelector('input[name="formacaoProfessor"]').value;
-  const titulacao = formProfessor.querySelector('select[name="titulacao"]').value;
+  const endereco = {
+    endereco_comple: formProfessor.querySelector('input[name="endereco_comple"]').value,
+    endereco_cep: formProfessor.querySelector('input[name="endereco_cep"]').value,
+    endereco_estado: formProfessor.querySelector('select[name="endereco_estado"]').value,
+    endereco_cidade: formProfessor.querySelector('input[name="endereco_cidade"]').value,
+    endereco_bairro: formProfessor.querySelector('input[name="endereco_bairro"]').value,
+  };
 
-  console.log({
-    nome,
-    cpf,
-    endereco,
-    complemento,
-    cep,
-    bairro,
-    cidade,
-    estado,
-    telefone,
-    formacao,
-    titulacao
-  });
+  const professor = {
+    prof_nome: formProfessor.querySelector('input[name="prof_nome"]').value,
+    prof_cpf: formProfessor.querySelector('input[name="prof_cpf"]').value,
+    prof_telefone: formProfessor.querySelector('input[name="prof_telefone"]').value,
+    prof_formacao: formProfessor.querySelector('input[name="prof_formacao"]').value,
+    prof_titulacao: formProfessor.querySelector('select[name="prof_titulacao"]').value,
+  };
 
   try {
-    const response = await fetch(apiUrlProfessor, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome,
-        cpf,
-        endereco,
-        complemento,
-        cep,
-        bairro,
-        cidade,
-        estado,
-        telefone,
-        formacao,
-        titulacao
-      }),
+    const enderecoResponse = await fetch("http://localhost:3000/tb_endereco", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(endereco),
     });
+    if (!enderecoResponse.ok) throw new Error("Erro ao cadastrar endereço");
 
-console.log(nome, cpf, endereco, complemento, cep, bairro, cidade, estado, telefone, formacao, titulacao);
+    const enderecoData = await enderecoResponse.json();
+    professor.fk_endereco_prof = enderecoData.id;
 
-    if (!response.ok) throw new Error('Erro na requisição');
+    const professorResponse = await fetch(apiUrlProfessor, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(professor),
+    });
+    if (!professorResponse.ok) throw new Error("Erro ao cadastrar professor");
 
-    const user = await response.json();
-    formProfessor.reset();
     alert("Professor cadastrado com sucesso!");
-    console.log(user);
+    formProfessor.reset();
+
   } catch (error) {
     console.error(error);
-    alert("Erro ao cadastrar professor. Tente novamente.");
+    alert("Erro ao cadastrar professor.");
   }
+
+  console.log(endereco);
+  console.log(professor);
 });
 
-// =================CADASTRO DE DISCIPLINA===========================
+
+// ! ==================================================================
+// ! ================= CADASTRO DE DISCIPLINA =========================
+// ! ==================================================================
 
 formDisciplina.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Dados do formulário
-  const nome = formDisciplina.querySelector('input[name="nomeDisciplina"]').value;
-  const codigo = formDisciplina.querySelector('input[name="codigoDisciplina"]').value;
-  const cargaHoraria = formDisciplina.querySelector('input[name="cargaHoraria"]').value;
-  const semestre = formDisciplina.querySelector('select[name="semestre"]').value;
-  const professorResponsavel = formDisciplina.querySelector('input[name="professorResponsavel"]').value;
-
-  console.log({
-    nome,
-    codigo,
-    cargaHoraria,
-    semestre,
-    professorResponsavel
-  });
+  const disciplina = {
+    disc_nome: formDisciplina.querySelector('input[name="disc_nome"]').value,
+    disc_duracao: formDisciplina.querySelector('input[name="disc_duracao"]').value,
+    fk_cursos_disc: formDisciplina.querySelector('select[name="fk_cursos_disc"]').value
+  };
 
   try {
     const response = await fetch(apiUrlDisciplina, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nome,
-        codigo,
-        cargaHoraria,
-        semestre,
-        professorResponsavel
-      }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(disciplina),
     });
+    if (!response.ok) throw new Error("Erro ao cadastrar disciplina");
 
-    if (!response.ok) throw new Error('Erro na requisição');
-
-    const disciplina = await response.json();
-    formDisciplina.reset();
     alert("Disciplina cadastrada com sucesso!");
-    console.log(disciplina);
+    formDisciplina.reset();
+
   } catch (error) {
     console.error(error);
-    alert("Erro ao cadastrar disciplina. Tente novamente.");
+    alert("Erro ao cadastrar disciplina.");
   }
 
-  
+  console.log(disciplina);
 });
 
-// =================CADASTRO DE TURMA===========================
+
+// ! ==================================================================
+// ! ================= CADASTRO DE TURMA ==============================
+// ! ==================================================================
 
 formTurma.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const codigoTurma = formTurma.querySelector('input[name="codigoTurma"]').value;
-  const disciplinaTurma = formTurma.querySelector('select[name="disciplinaTurma"]').value;
-  const professorTurma = formTurma.querySelector('select[name="professorTurma"]').value;
-  const semestreTurma = formTurma.querySelector('select[name="semestreTurma"]').value;
-  const anoTurma = formTurma.querySelector('input[name="anoTurma"]').value;
+  const turma = {
+    fk_prof_turma: formTurma.querySelector('select[name="fk_prof_turma"]').value,
+    turma_curso: formTurma.querySelector('select[name="fk_curso_turma"]').value,
+    turma_horario: formTurma.querySelector('input[name="turma_horario"]').value,
+  };
 
   try {
     const response = await fetch(apiUrlTurma, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        codigoTurma,
-        disciplinaTurma,
-        professorTurma,
-        semestreTurma,
-        anoTurma
-      }),
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(turma),
     });
 
-    if (!response.ok) throw new Error('Erro na requisição');
+    const data = await response.json(); // lê o body da resposta
 
-    const turma = await response.json();
+    if (!response.ok) {
+      // mostra a mensagem real do backend
+      throw new Error(data.error || "Erro ao cadastrar turma");
+    }
+
+    alert(data.message);
     formTurma.reset();
-    alert("Turma cadastrada com sucesso!");
-    console.log(turma);
+
+    // Aqui você pode chamar uma função para atualizar a tabela sem refresh
+    // await carregarTurmas();
+
   } catch (error) {
     console.error(error);
-    alert("Erro ao cadastrar turma. Tente novamente.");
+    alert(error.message); // mostra o erro real
   }
+
+  console.log(turma);
 });
 
+
+
+// ! ==================================================================
+// ! ================= CADASTRO DE CURSO ==============================
+// ! ==================================================================
+
+formCurso.addEventListener('submit', async (e) => {
+  e.preventDefault();
+console.log("🔵 Evento: cadastroCurso");
+  const curso = {
+    cursos_nome: formCurso.querySelector('input[name="cursos_nome"]').value,
+    cursos_cordenador: formCurso.querySelector('input[name="cursos_cordenador"]').value,
+    cursos_duracao: parseInt(formCurso.querySelector('input[name="cursos_duracao"]').value),
+  };
+
+  try {
+    const response = await fetch(apiUrlCurso, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(curso),
+    });
+    if (!response.ok) throw new Error("Erro ao cadastrar curso");
+
+    alert("Curso cadastrado com sucesso!");
+    formCurso.reset();
+
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao cadastrar curso.");
+  }
+
+  console.log(curso);
+});
