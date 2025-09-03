@@ -7,9 +7,9 @@ const pool = mysql.createConnection({
     database: 'db_gerenciamento_academico',
 });
 
-pool.connect((err) => {
-    if (err) throw err;
-    console.log("Conectado ao banco de dados MySql!")
-})
+connection.connect((err) => {
+  if (err) throw err;
+  console.log('Conectado ao banco de dados do Mysql');
+});
 
 module.exports = pool;

@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
   });
 });
 
-router.get('/', (req, res) => {
+router.get('/connect.Db.js', (req, res) => {
   const sql = 'SELECT * FROM tb_disciplinas';
 
   connection.query(sql, (err, results) => {
@@ -35,7 +35,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/connect.Db.js', (req, res) => {
   const { id } = req.params;
   const sql = 'SELECT * FROM tb_disciplinas WHERE id = ?';
 
