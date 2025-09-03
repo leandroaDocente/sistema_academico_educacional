@@ -1,10 +1,10 @@
-// ==================================================================
-// =================FUNCIONAMENTO DO SIDEBAR=========================
-// ================================================================== 
+// ? ==================================================================
+// ? =================FUNCIONAMENTO DO SIDEBAR=========================
+// ? ================================================================== 
 
 const navLinks = document.querySelectorAll('.sidebar a');
 
-// Pega todas as seções e forms
+// ! Pega todas as seções e forms
 const telaInicial = document.querySelector('.telainicial');
 const cadastroAluno = document.getElementById('cadastroAluno');
 const cadastroProfessor = document.getElementById('cadastroProfessor');
@@ -12,12 +12,12 @@ const cadastroDisciplina = document.getElementById('cadastroDisciplina');
 const cadastroTurma = document.getElementById('cadastroTurma');
 const cadastroCurso = document.getElementById('cadastroCurso');
 
-// Pega o container principal
+// ! Pega o container principal
 const mainContainer = document.querySelector('main.container');
 
-// Função para mostrar a seção correta
+// ! Função para mostrar a seção correta
 function mostrarSecao(secaoId) {
-  // Esconde todas
+  // ! Esconde todas
   telaInicial.style.display = 'flex';
   cadastroAluno.style.display = 'none';
   cadastroProfessor.style.display = 'none';
@@ -25,11 +25,11 @@ function mostrarSecao(secaoId) {
   cadastroTurma.style.display = 'none';
   cadastroCurso.style.display = 'none';
 
-  // Remove h1 anterior
+  // ! Remove h1 anterior
   const prevH1 = mainContainer.querySelector('h1');
   if(prevH1) prevH1.remove();
 
-  // Variável do título
+  // ! Variável do título
   let titulo = '';
 
   switch(secaoId) {
@@ -59,18 +59,18 @@ function mostrarSecao(secaoId) {
       break;
   }
 
-  // Cria título no topo se tiver
+  //  ! Cria título no topo se tiver
   if(titulo){
     const h1 = document.createElement('h1');
     h1.textContent = titulo;
     mainContainer.prepend(h1);
   }
 
-  // Salva no localStorage
+  // ! Salva no localStorage
   localStorage.setItem('ultimaSecao', secaoId);
 }
 
-// Event listener nos links da nav
+// ! Event listener nos links da nav
 navLinks.forEach(link => {
   link.addEventListener('click', function(e){
     e.preventDefault();
@@ -79,6 +79,6 @@ navLinks.forEach(link => {
   });
 });
 
-// Ao carregar a página, verifica localStorage
+// ! Ao carregar a página, verifica localStorage
 const ultimaSecao = localStorage.getItem('ultimaSecao') || 'inicio';
 mostrarSecao(ultimaSecao);
