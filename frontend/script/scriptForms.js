@@ -130,11 +130,12 @@ formProfessor.addEventListener('submit', async (e) => {
 formDisciplina.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const disciplina = {
-    disc_nome: formDisciplina.querySelector('input[name="disc_nome"]').value,
-    disc_duracao: formDisciplina.querySelector('input[name="disc_duracao"]').value,
-    fk_cursos_disc: formDisciplina.querySelector('select[name="fk_cursos_disc"]').value
-  };
+const disciplina = {
+  disc_nome: formDisciplina.querySelector('input[name="disc_nome"]').value,
+  disc_duracao: formDisciplina.querySelector('input[name="disc_duracao"]').value,
+  ementa: formDisciplina.querySelector('input[name="ementa"]').value,
+  fk_professor: formDisciplina.querySelector('select[name="professorDisciplina"]').value
+};
 
   try {
     const response = await fetch(apiUrlDisciplina, {
@@ -165,7 +166,7 @@ formTurma.addEventListener('submit', async (e) => {
 
   const turma = {
     fk_prof_turma: formTurma.querySelector('select[name="fk_prof_turma"]').value,
-    turma_curso: formTurma.querySelector('select[name="fk_curso_turma"]').value,
+    turma_curso: formTurma.querySelector('select[name="fk_curso_turma"]').selectedOptions[0].text, 
     turma_horario: formTurma.querySelector('input[name="turma_horario"]').value,
   };
 
@@ -176,22 +177,18 @@ formTurma.addEventListener('submit', async (e) => {
       body: JSON.stringify(turma),
     });
 
-    const data = await response.json(); // lê o body da resposta
+    const data = await response.json();
 
     if (!response.ok) {
-      // mostra a mensagem real do backend
       throw new Error(data.error || "Erro ao cadastrar turma");
     }
 
     alert(data.message);
     formTurma.reset();
 
-    // Aqui você pode chamar uma função para atualizar a tabela sem refresh
-    // await carregarTurmas();
-
   } catch (error) {
     console.error(error);
-    alert(error.message); // mostra o erro real
+    alert(error.message);
   }
 
   console.log(turma);
@@ -203,30 +200,51 @@ formTurma.addEventListener('submit', async (e) => {
 // ! ================= CADASTRO DE CURSO ==============================
 // ! ==================================================================
 
-formCurso.addEventListener('submit', async (e) => {
+formCurso.addEventListener("submit", async (e) => {
   e.preventDefault();
-console.log("🔵 Evento: cadastroCurso");
-  const curso = {
-    cursos_nome: formCurso.querySelector('input[name="cursos_nome"]').value,
-    cursos_cordenador: formCurso.querySelector('input[name="cursos_cordenador"]').value,
-    cursos_duracao: parseInt(formCurso.querySelector('input[name="cursos_duracao"]').value),
+  console.log("🔵 Evento: cadastroCurso");
+
+  const cursos_nome = formCurso.querySelector('input[name="cursos_nome"]').value.trim();
+  const cursos_cordenador = formCurso.querySelector('input[name="cursos_cordenador"]').value.trim();
+  const cursos_duracao = parseInt(
+    formCurso.querySelector('input[name="cursos_duracao"]').value,
+    10
+  );
+  const modalidade = formCurso.querySelector('select[name="modalidade"]').value;
+  const nivel_curso = formCurso.querySelector('select[name="nivel_curso"]').value;
+
+  // Validações simples no front (evita request inválido)
+  if (!cursos_nome || Number.isNaN(cursos_duracao) || !modalidade || !nivel_curso) {
+    alert("Preencha todos os campos corretamente.");
+    return;
+  }
+
+  const payload = {
+    cursos_nome,
+    cursos_cordenador, // se vazio, o backend já converte para null
+    cursos_duracao,
+    modalidade,
+    nivel_curso,
   };
 
   try {
     const response = await fetch(apiUrlCurso, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(curso),
+      body: JSON.stringify(payload),
     });
-    if (!response.ok) throw new Error("Erro ao cadastrar curso");
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data?.error || "Erro ao cadastrar curso");
+    }
 
     alert("Curso cadastrado com sucesso!");
     formCurso.reset();
-
   } catch (error) {
     console.error(error);
-    alert("Erro ao cadastrar curso.");
+    alert(error.message || "Erro ao cadastrar curso.");
   }
 
-  console.log(curso);
+  console.log(payload);
 });
