@@ -132,9 +132,10 @@
         <form id="cadastroDisciplina">
   <input type="text" name="disc_nome" placeholder="Nome da Disciplina" required>
   <input type="number" name="disc_duracao" placeholder="Carga Horária" required>
-  <label for="cursoDisciplina">Curso:</label>
-  <select name="fk_cursos_disc" id="cursoDisciplina" required>
-    <option value="">Selecione o curso</option>
+  <input type="text" name="ementa" placeholder="Descrição da Disciplina" required>
+  <label for="professorDisciplina">Professor</label>
+  <select name="professorDisciplina" id="professorDisciplina" required>
+    <option value="">Selecione o professor</option>
   </select>
   <button type="submit">Cadastrar Disciplina</button>
 </form>
