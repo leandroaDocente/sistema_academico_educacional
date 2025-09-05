@@ -1,38 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-const connectDb = require('../connectDb'); 
+const connection = require('../connectDb'); 
 
 router.post('/', async (req, res) => {
-    let connection;
     try {
         const {
-            prof_nome, prof_cpf, prof_telefone, prof_formacao, prof_titulacao,
-            endereco_comple, endereco_cep, endereco_estado, endereco_cidade, endereco_bairro
+            prof_nome, prof_cpf, prof_telefone, prof_formacao, prof_titulacao, fk_endereco_prof
         } = req.body;
 
-        if (!prof_nome || !prof_cpf || !prof_telefone || !prof_formacao || !prof_titulacao || !endereco_cep || !endereco_estado || !endereco_cidade || !endereco_bairro) {
-            return res.status(400).json({ error: 'Todos os campos obrigatórios devem ser preenchidos.' });
-        }
-        
-        connection = await connectDb();
+        const [result] = await connection.query("INSERT INTO tb_professor (prof_nome, prof_cpf, prof_telefone, prof_formacao, prof_titulacao, fk_endereco_prof) VALUES (?, ?, ?, ?, ?, ?)", [prof_nome, prof_cpf, prof_telefone, prof_formacao, prof_titulacao, fk_endereco_prof]);
 
-        await connection.beginTransaction();
-
-        const sqlEndereco = 'INSERT INTO tb_endereco (endereco_comple, endereco_cep, endereco_estado, endereco_cidade, endereco_bairro) VALUES (?, ?, ?, ?, ?)';
-        const [resultEndereco] = await connection.execute(sqlEndereco, [endereco_comple, endereco_cep, endereco_estado, endereco_cidade, endereco_bairro]);
-        const enderecoId = resultEndereco.insertId;
-
-        const sqlProfessor = 'INSERT INTO tb_professor (prof_nome, prof_cpf, prof_telefone, prof_formacao, prof_titulacao, fk_endereco_prof) VALUES (?, ?, ?, ?, ?, ?)';
-        const [resultProfessor] = await connection.execute(sqlProfessor, [prof_nome, prof_cpf, prof_telefone, prof_formacao, prof_titulacao, enderecoId]);
-
-        await connection.commit();
-
-        res.status(201).json({
-            message: 'Professor cadastrado com sucesso!',
-            professorId: resultProfessor.insertId,
-            enderecoId: enderecoId
-        });
+        res.status(201).json({id: result.insertId,  ...req.body});
 
     } catch (error) {
         if (connection) {
@@ -40,10 +19,6 @@ router.post('/', async (req, res) => {
         }
         console.error('Erro ao cadastrar professor:', error);
         res.status(500).json({ error: 'Erro interno do servidor.' });
-    } finally {
-        if (connection) {
-            connection.end();
-        }
     }
 });
 
