@@ -13,7 +13,13 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
+<<<<<<< HEAD
     "mysql2": "^3.14.4"
   },
   "description": ""
+=======
+    "mysql2": "^3.14.4",
+    "pool": "^0.4.1"
+  }
+>>>>>>> ce48b0a7db0dc1983212fb8b22d07e185ba83521
 }
