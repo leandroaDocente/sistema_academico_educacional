@@ -1,92 +1,87 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const connection = require('../connectDb');
+const connection = require("../connectDb");
 
-router.post('/', (req, res) => {
-  const { nome, codigo, cargaHoraria, semestre, professorResponsavel } = req.body;
+// CADASTRAR DISCIPLINA
+router.post("/", async (req, res) => {
+  try {
+    const { disc_nome, disc_duracao, ementa, fk_professor } = req.body;
 
-  if (!nome || !codigo || !cargaHoraria || !semestre || !professorResponsavel) {
-    return res.status(400).json({ error: 'Preencha todos os campos obrigatórios.' });
+    if (!disc_nome || !disc_duracao || !fk_professor) {
+      return res.status(400).json({ error: "Preencha todos os campos obrigatórios." });
+    }
+
+    const [result] = await connection.query(
+      "INSERT INTO tb_disciplinas (disc_nome, disc_duracao, ementa, fk_professor) VALUES (?, ?, ?, ?)",
+      [disc_nome, disc_duracao, ementa, fk_professor]
+    );
+
+    res.status(201).json({ message: "Disciplina cadastrada com sucesso!", id: result.insertId });
+  } catch (error) {
+    console.error("Erro ao inserir disciplina:", error);
+    res.status(500).json({ error: "Erro interno do servidor." });
   }
-
-  const sql = `
-    INSERT INTO tb_disciplinas (nome, codigo, carga_horaria, semestre, professor_responsavel)
-    VALUES (?, ?, ?, ?, ?)
-  `;
-
-  connection.query(sql, [nome, codigo, cargaHoraria, semestre, professorResponsavel], (err, result) => {
-    if (err) {
-      console.error('Erro ao inserir disciplina:', err);
-      return res.status(500).json({ error: 'Erro ao cadastrar disciplina.' });
-    }
-    res.status(201).json({ message: 'Disciplina cadastrada com sucesso!', id: result.insertId });
-  });
 });
 
-router.get('/connect.Db.js', (req, res) => {
-  const sql = 'SELECT * FROM tb_disciplinas';
-
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error('Erro ao buscar disciplinas:', err);
-      return res.status(500).json({ error: 'Erro ao buscar disciplinas.' });
-    }
-    res.json(results);
-  });
+// LISTAR TODAS
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await connection.query("SELECT * FROM tb_disciplinas");
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Erro ao buscar disciplinas:", error);
+    res.status(500).json({ error: "Erro interno do servidor." });
+  }
 });
 
-router.get('/connect.Db.js', (req, res) => {
-  const { id } = req.params;
-  const sql = 'SELECT * FROM tb_disciplinas WHERE id = ?';
+// LISTAR POR ID
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [rows] = await connection.query("SELECT * FROM tb_disciplinas WHERE disc_id = ?", [id]);
 
-  connection.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Erro ao buscar disciplina:', err);
-      return res.status(500).json({ error: 'Erro ao buscar disciplina.' });
-    }
-    if (result.length === 0) {
-      return res.status(404).json({ error: 'Disciplina não encontrada.' });
-    }
-    res.json(result[0]);
-  });
+    if (rows.length === 0) return res.status(404).json({ error: "Disciplina não encontrada." });
+
+    res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error("Erro ao buscar disciplina:", error);
+    res.status(500).json({ error: "Erro interno do servidor." });
+  }
 });
 
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  const { nome, codigo, cargaHoraria, semestre, professorResponsavel } = req.body;
+// ATUALIZAR
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { disc_nome, disc_duracao, ementa, fk_professor } = req.body;
 
-  const sql = `
-    UPDATE tb_disciplinas 
-    SET nome = ?, codigo = ?, carga_horaria = ?, semestre = ?, professor_responsavel = ?
-    WHERE id = ?
-  `;
+    const [result] = await connection.query(
+      "UPDATE tb_disciplinas SET disc_nome = ?, disc_duracao = ?, ementa = ?, fk_professor = ? WHERE disc_id = ?",
+      [disc_nome, disc_duracao, ementa, fk_professor, id]
+    );
 
-  connection.query(sql, [nome, codigo, cargaHoraria, semestre, professorResponsavel, id], (err, result) => {
-    if (err) {
-      console.error('Erro ao atualizar disciplina:', err);
-      return res.status(500).json({ error: 'Erro ao atualizar disciplina.' });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Disciplina não encontrada.' });
-    }
-    res.json({ message: 'Disciplina atualizada com sucesso!' });
-  });
+    if (result.affectedRows === 0) return res.status(404).json({ error: "Disciplina não encontrada." });
+
+    res.json({ message: "Disciplina atualizada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao atualizar disciplina:", error);
+    res.status(500).json({ error: "Erro interno do servidor." });
+  }
 });
 
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  const sql = 'DELETE FROM tb_disciplinas WHERE id = ?';
+// DELETAR
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [result] = await connection.query("DELETE FROM tb_disciplinas WHERE disc_id = ?", [id]);
 
-  connection.query(sql, [id], (err, result) => {
-    if (err) {
-      console.error('Erro ao deletar disciplina:', err);
-      return res.status(500).json({ error: 'Erro ao deletar disciplina.' });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Disciplina não encontrada.' });
-    }
-    res.json({ message: 'Disciplina deletada com sucesso!' });
-  });
+    if (result.affectedRows === 0) return res.status(404).json({ error: "Disciplina não encontrada." });
+
+    res.json({ message: "Disciplina deletada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao deletar disciplina:", error);
+    res.status(500).json({ error: "Erro interno do servidor." });
+  }
 });
 
 module.exports = router;

@@ -1,84 +1,85 @@
 const express = require("express");
 const router = express.Router();
+const connection = require("../connectDb"); // sua conexão MySQL
 
-const connection = require("../connectDb"); 
-
-
-router.post("/", (req, res) => {
-  const { codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma } = req.body;
-
-  if (!codigoTurma || !disciplinaTurma || !professorTurma || !semestreTurma || !anoTurma) {
-    return res.status(400).json({ error: "Preencha todos os campos obrigatórios" });
+// ================= GET TODAS AS TURMAS =================
+router.get("/", async (req, res) => {
+  try {
+    const [rows] = await connection.query("SELECT * FROM tb_turmas");
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const query = `
-    INSERT INTO tb_turma 
-    (codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma) 
-    VALUES (?, ?, ?, ?, ?)
-  `;
-
-  connection.query(query, [codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma], (err, result) => {
-    if (err) {
-      console.error("Erro ao cadastrar turma:", err);
-      return res.status(500).json({ error: "Erro no servidor" });
-    }
-    res.status(201).json({ message: "Turma cadastrada com sucesso!", turmaId: result.insertId });
-  });
 });
 
-router.get("/", (req, res) => {
-  connection.query("SELECT * FROM tb_turma", (err, results) => {
-    if (err) {
-      console.error("Erro ao buscar turmas:", err);
-      return res.status(500).json({ error: "Erro no servidor" });
-    }
-    res.json(results);
-  });
+// ================= GET TURMA POR ID =================
+router.get("/:id", async (req, res) => {
+  try {
+    const [rows] = await connection.query(
+      "SELECT * FROM tb_turmas WHERE turma_id = ?",
+      [req.params.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: "Turma não encontrada" });
+    res.json(rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-router.get("", (req, res) => {
-  const { id } = req.params;
-  connection.query("SELECT * FROM tb_turma WHERE turma_id = ?", [id], (err, result) => {
-    if (err) {
-      console.error("Erro ao buscar turma:", err);
-      return res.status(500).json({ error: "Erro no servidor" });
-    }
-    if (result.length === 0) {
-      return res.status(404).json({ message: "Turma não encontrada" });
-    }
-    res.json(result[0]);
-  });
+// ================= CADASTRAR TURMA =================
+router.post("/", async (req, res) => {
+  try {
+    const { fk_prof_turma, fk_curso_turma, turma_horario, turma_data } = req.body;
+
+    const [result] = await connection.query(
+      "INSERT INTO tb_turmas (fk_prof_turma, fk_curso_turma, turma_horario) VALUES (?, ?, ?)",
+      [fk_prof_turma, fk_curso_turma, turma_horario]
+    );
+
+    res.status(201).json({
+      message: "Turma cadastrada com sucesso!",
+      turma: { id: result.insertId, ...req.body }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
+// ================= ATUALIZAR TURMA =================
+router.put("/:id", async (req, res) => {
+  try {
+    const { fk_prof_turma, fk_curso_turma, turma_horario} = req.body;
 
-router.put("", (req, res) => {
-  const { id } = req.params;
-  const { codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma } = req.body;
+    const [result] = await connection.query(
+      "UPDATE tb_turmas SET fk_prof_turma = ?, fk_curso_turma = ?, turma_horario = ?, WHERE turma_id = ?",
+      [fk_prof_turma, fk_curso_turma, turma_horario, req.params.id]
+    );
 
-  const query = `
-    UPDATE tb_turma 
-    SET codigoTurma=?, disciplinaTurma=?, professorTurma=?, semestreTurma=?, anoTurma=?
-    WHERE turma_id=?
-  `;
+    if (result.affectedRows === 0) return res.status(404).json({ error: "Turma não encontrada" });
 
-  connection.query(query, [codigoTurma, disciplinaTurma, professorTurma, semestreTurma, anoTurma, id], (err, result) => {
-    if (err) {
-      console.error("Erro ao atualizar turma:", err);
-      return res.status(500).json({ error: "Erro no servidor" });
-    }
-    res.json({ message: "Turma atualizada com sucesso!" });
-  });
+    res.json({
+      message: "Turma atualizada com sucesso!",
+      turma: { id: req.params.id, ...req.body }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-router.delete("/:id", (req, res) => {
-  const { id } = req.params;
-  connection.query("DELETE FROM tb_turma WHERE turma_id = ?", [id], (err, result) => {
-    if (err) {
-      console.error("Erro ao deletar turma:", err);
-      return res.status(500).json({ error: "Erro no servidor" });
-    }
+// ================= DELETAR TURMA =================
+router.delete("/:id", async (req, res) => {
+  try {
+    const [result] = await connection.query(
+      "DELETE FROM tb_turmas WHERE turma_id = ?",
+      [req.params.id]
+    );
+
+    if (result.affectedRows === 0) return res.status(404).json({ error: "Turma não encontrada" });
+
     res.json({ message: "Turma deletada com sucesso!" });
-  });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;
