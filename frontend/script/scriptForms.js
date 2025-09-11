@@ -17,7 +17,6 @@ const formCurso = document.getElementById('cadastroCurso');
 
 formAluno.addEventListener('submit', async (e) => {
   e.preventDefault();
-  console.log("🔵 Evento: cadastroAluno");
   // Endereço
   const endereco = {
     endereco_comple: formAluno.querySelector('input[name="endereco_comple"]').value,
@@ -166,7 +165,7 @@ formTurma.addEventListener('submit', async (e) => {
 
   const turma = {
     fk_prof_turma: formTurma.querySelector('select[name="fk_prof_turma"]').value,
-    turma_curso: formTurma.querySelector('select[name="fk_curso_turma"]').selectedOptions[0].text, 
+  fk_curso_turma: parseInt(formTurma.querySelector('select[name="fk_curso_turma"]').value, 10),
     turma_horario: formTurma.querySelector('input[name="turma_horario"]').value,
   };
 
