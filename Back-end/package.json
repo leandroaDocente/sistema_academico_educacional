@@ -8,10 +8,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "commonjs",
+  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "mysql2": "^3.14.5"
-  },
-  "description": ""
+    "mysql2": "^3.14.4",
+    "pool": "^0.4.1"
+  }
 }
